@@ -16,9 +16,35 @@ FaceIQ doit automatiser cette tâche en extrayant tous les visages détectés et
 
 - utilisateur Windows souhaitant trier des photos personnelles ;
 - photographe amateur ;
+- coordinateur d'événement recevant des photos de plusieurs photographes ;
 - service communication interne ;
 - administrateur ou technicien ayant besoin d'un outil local simple ;
 - usage hors cloud ou environnement isolé.
+
+## 3.1 Workflow métier événement
+
+Le workflow cible est :
+
+1. les photographes livrent leurs photos dans un dossier par événement ;
+2. chaque photographe possède son propre sous-dossier ;
+3. FaceIQ copie les originaux dans un dossier événement stable ;
+4. FaceIQ ignore les doublons déjà reçus ;
+5. FaceIQ extrait les visages dans un dossier séparé ;
+6. l'utilisateur récupère uniquement les visages et le rapport CSV.
+
+Structure cible :
+
+```text
+FaceIQ_Workspace/
+├── 00_A_RECEVOIR/
+├── 01_EVENEMENTS/
+│   └── AAAA-MM-JJ_nom_evenement/
+│       ├── 01_Photos_originales/
+│       ├── 02_Visages_extraits/
+│       ├── 03_Rapports/
+│       └── 04_Logs/
+└── 02_ARCHIVES/
+```
 
 ## 4. Fonctionnalités principales V1
 

@@ -28,6 +28,7 @@ samples/*
 output/*
 !output/.gitkeep
 FaceIQ_Resultats/
+FaceIQ_Workspace/
 
 # OS
 .DS_Store

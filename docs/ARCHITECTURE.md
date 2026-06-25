@@ -10,7 +10,9 @@ FaceIQ/
 ├── docs/
 │   ├── PROJECT_SPEC.md
 │   ├── ROADMAP.md
-│   └── ARCHITECTURE.md
+│   ├── ARCHITECTURE.md
+│   ├── SOURCES.md
+│   └── WORKFLOW_PHOTOGRAPHES.md
 ├── src/
 │   └── faceiq/
 │       ├── __init__.py
@@ -25,9 +27,15 @@ FaceIQ/
 │   └── .gitkeep
 ├── samples/
 │   └── .gitkeep
-└── output/
-    └── .gitkeep
+├── output/
+│   └── .gitkeep
+└── FaceIQ_Workspace/        # données locales, ignorées par Git
+    ├── 00_A_RECEVOIR/
+    ├── 01_EVENEMENTS/
+    └── 02_ARCHIVES/
 ```
+
+`samples` ne doit contenir que des images de test. Les vraies sources photographes passent par `FaceIQ_Workspace\00_A_RECEVOIR`.
 
 ## Rôle des modules
 
