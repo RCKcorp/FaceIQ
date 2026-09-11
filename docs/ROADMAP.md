@@ -1,61 +1,44 @@
 # Roadmap — FaceIQ
 
-## Phase 0 — Cadrage
+## V1 — Application locale Windows
 
-Objectif : définir clairement le projet avant de coder.
+- [x] Définir le projet et l’architecture
+- [x] Lire un dossier d’images
+- [x] Inclure optionnellement les sous-dossiers
+- [x] Détecter les visages localement
+- [x] Extraire les visages avec marge
+- [x] Calculer netteté, luminosité, taille, cadrage, orientation et confiance
+- [x] Générer un score sur 100
+- [x] Classer Excellent / Bon / Moyen / Mauvais
+- [x] Générer un rapport CSV
+- [x] Générer un rapport HTML
+- [x] Créer l’interface Windows
+- [x] Ajouter barre de progression et annulation
+- [x] Afficher les résultats dans l’application
+- [x] Ajouter logs et gestion d’erreurs
+- [x] Ajouter tests unitaires
+- [x] Préparer le build PyInstaller
+- [x] Préparer un installateur Inno Setup
+- [x] Ajouter une CI Windows
 
-- [x] Choisir le nom du projet
-- [x] Créer le dépôt GitHub
-- [x] Rédiger le README initial
-- [x] Rédiger la spécification projet
-- [ ] Valider les fonctionnalités V1
-- [ ] Choisir les technologies
-- [ ] Créer les issues GitHub
+## V1.1 — Calibration
 
-## Phase 1 — Prototype moteur
+- [ ] Tester le score sur un corpus de photos réelles variées
+- [ ] Ajuster les courbes de netteté et luminosité
+- [ ] Ajouter un panneau détaillant les sous-scores dans l’interface
+- [ ] Ajouter une icône et les métadonnées Windows de l’exécutable
+- [ ] Ajouter des tests d’intégration sur un petit corpus non sensible
 
-Objectif : prouver que l'analyse fonctionne sans interface graphique.
+## V2 — Détection améliorée
 
-- [ ] Lire un dossier d'images
-- [ ] Détecter les visages
-- [ ] Extraire les visages
-- [ ] Calculer la netteté
-- [ ] Calculer la luminosité
-- [ ] Calculer la taille du visage
-- [ ] Générer un score sur 100
-- [ ] Classer les images par score
-- [ ] Générer un rapport CSV
+- [ ] Ajouter un backend YuNet local
+- [ ] Conserver le backend OpenCV classique en secours
+- [ ] Améliorer l’estimation de pose du visage
+- [ ] Ajouter les réglages de seuils dans l’interface
 
-## Phase 2 — Application Windows simple
+## V3 — Regroupement optionnel
 
-Objectif : rendre l'outil utilisable facilement.
-
-- [ ] Créer une interface graphique
-- [ ] Ajouter un bouton de sélection du dossier source
-- [ ] Ajouter un bouton de lancement d'analyse
-- [ ] Ajouter une barre de progression
-- [ ] Afficher un résumé des résultats
-- [ ] Ajouter un bouton pour ouvrir le dossier de sortie
-
-## Phase 3 — Version propre et exécutable
-
-Objectif : distribuer l'application facilement.
-
-- [ ] Nettoyer l'architecture
-- [ ] Ajouter un fichier de configuration
-- [ ] Ajouter des logs
-- [ ] Ajouter une gestion d'erreurs propre
-- [ ] Créer un exécutable Windows
-- [ ] Ajouter une icône
-- [ ] Rédiger une documentation utilisateur
-
-## Phase 4 — Améliorations avancées
-
-Objectif : rendre l'application plus intelligente.
-
+- [ ] Regrouper les visages similaires par personne
 - [ ] Détecter les doublons
-- [ ] Regrouper les visages similaires
-- [ ] Sélectionner le meilleur visage d'une même personne
-- [ ] Générer un rapport HTML
-- [ ] Ajouter un mode sombre
-- [ ] Ajouter un export Excel
+- [ ] Sélectionner automatiquement le meilleur visage d’une série
+- [ ] Ajouter comparaison et export de sélection

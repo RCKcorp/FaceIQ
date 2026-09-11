@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import logging
 import threading
 from datetime import datetime
@@ -61,7 +62,8 @@ class FaceAnalyzer:
                     crop = crop_face(image, detection, self.config.crop_margin)
                     metrics = self.scorer.score(image, crop, detection)
                     safe_stem = self._safe_stem(path.stem)
-                    filename = f"{safe_stem}__face_{face_index:02d}__{metrics.total:05.1f}.jpg"
+                    source_token = self._source_token(path)
+                    filename = f"{safe_stem}__{source_token}__face_{face_index:02d}__{metrics.total:05.1f}.jpg"
                     crop_path = output_folder / "Tous_les_visages" / filename
                     save_jpeg(crop_path, crop)
                     category_path = copy_to_category(crop_path, output_folder / metrics.category)
@@ -82,6 +84,10 @@ class FaceAnalyzer:
         if progress:
             progress(len(images), len(images), "Terminé")
         return summary
+
+    @staticmethod
+    def _source_token(path: Path) -> str:
+        return hashlib.sha1(str(path.resolve()).encode("utf-8", errors="replace")).hexdigest()[:8]
 
     @staticmethod
     def _safe_stem(stem: str) -> str:

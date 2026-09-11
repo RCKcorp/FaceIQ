@@ -1,106 +1,69 @@
 # Architecture — FaceIQ
 
-## Structure cible du projet
+## État
+
+La V1 est implémentée. L’application sépare l’interface, le moteur d’analyse, la détection, la notation et les exports.
+
+## Structure
 
 ```text
 FaceIQ/
-├── README.md
-├── requirements.txt
-├── .gitignore
-├── docs/
-│   ├── PROJECT_SPEC.md
-│   ├── ROADMAP.md
-│   └── ARCHITECTURE.md
-├── src/
-│   └── faceiq/
-│       ├── __init__.py
-│       ├── app.py
-│       ├── detector.py
-│       ├── extractor.py
-│       ├── quality.py
-│       ├── exporter.py
-│       ├── config.py
-│       └── logger.py
-├── tests/
-│   └── .gitkeep
-├── samples/
-│   └── .gitkeep
-└── output/
-    └── .gitkeep
+├── run_faceiq.py
+├── FaceIQ.spec
+├── build.ps1
+├── installer/
+│   └── FaceIQ.iss
+├── src/faceiq/
+│   ├── __init__.py
+│   ├── __main__.py
+│   ├── app.py
+│   ├── analyzer.py
+│   ├── config.py
+│   ├── detector.py
+│   ├── exporter.py
+│   ├── extractor.py
+│   ├── logger.py
+│   ├── models.py
+│   └── quality.py
+└── tests/
 ```
 
-## Rôle des modules
-
-### app.py
-
-Point d'entrée de l'application.
-
-Dans la V1, ce fichier pourra lancer le traitement en console.
-
-Dans la V2, il lancera l'interface graphique.
-
-### detector.py
-
-Responsable de la détection des visages dans les images.
-
-### extractor.py
-
-Responsable du découpage et de l'export temporaire des visages détectés.
-
-### quality.py
-
-Responsable du calcul de la note qualité.
-
-Critères prévus :
-
-- netteté ;
-- luminosité ;
-- taille ;
-- cadrage ;
-- orientation ;
-- confiance de détection.
-
-### exporter.py
-
-Responsable de l'export des résultats :
-
-- images classées ;
-- rapport CSV ;
-- futur rapport Excel ou HTML.
-
-### config.py
-
-Responsable des paramètres de l'application :
-
-- seuils de notation ;
-- formats d'images acceptés ;
-- noms des dossiers de sortie ;
-- marge autour du visage.
-
-### logger.py
-
-Responsable des logs techniques et des erreurs.
-
-## Organisation des résultats
+## Flux de traitement
 
 ```text
-FaceIQ_Resultats/
-├── Excellent/
-├── Bon/
-├── Moyen/
-├── Mauvais/
-├── Tous_les_visages/
-└── rapport_analyse.csv
+Dossier source
+    ↓
+Découverte des images
+    ↓
+Chargement + correction EXIF
+    ↓
+Détection locale OpenCV
+    ↓
+Extraction avec marge
+    ↓
+Notation qualité
+    ↓
+Classement
+    ↓
+Galerie + CSV + HTML
 ```
 
-## Philosophie technique
+## Modules
 
-Le projet doit rester :
+- `app.py` : interface PySide6 et traitement asynchrone.
+- `analyzer.py` : orchestration du lot, annulation et gestion des erreurs.
+- `detector.py` : backend de détection isolé et remplaçable.
+- `extractor.py` : découpage et sauvegarde des visages.
+- `quality.py` : score sur 100.
+- `exporter.py` : dossiers de classement, CSV et rapport HTML.
+- `config.py` : seuils, poids et paramètres.
+- `logger.py` : journal local.
+- `models.py` : objets de données partagés.
 
-- simple ;
-- lisible ;
-- local ;
-- maintenable ;
-- facilement transformable en exécutable Windows.
+## Détection
 
-La priorité est d'obtenir une V1 fiable avant d'ajouter des fonctions avancées.
+La V1 utilise les cascades livrées avec OpenCV afin de rester entièrement hors ligne et de ne nécessiter aucun téléchargement de modèle au premier lancement. Le backend est encapsulé pour permettre un passage ultérieur à YuNet sans modifier le reste de l’application.
+
+## Distribution Windows
+
+`run_faceiq.py` sert de point d’entrée de package pour PyInstaller. `FaceIQ.spec` produit `FaceIQ.exe`, puis `installer/FaceIQ.iss` permet de créer un installateur Windows avec désinstallation standard.
