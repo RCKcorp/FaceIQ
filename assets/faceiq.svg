@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512" role="img" aria-labelledby="title desc">
+  <title id="title">FaceIQ</title>
+  <desc id="desc">Un visage stylisé dans un cadre de mise au point bleu et turquoise.</desc>
+  <defs>
+    <linearGradient id="bg" x1="72" y1="56" x2="448" y2="464" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#172554"/>
+      <stop offset="1" stop-color="#07111F"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="122" y1="108" x2="397" y2="413" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#38BDF8"/>
+      <stop offset="1" stop-color="#2DD4BF"/>
+    </linearGradient>
+  </defs>
+  <rect x="20" y="20" width="472" height="472" rx="112" fill="url(#bg)"/>
+  <path d="M154 104h-30c-28 0-50 22-50 50v30M358 104h30c28 0 50 22 50 50v30M154 408h-30c-28 0-50-22-50-50v-30M358 408h30c28 0 50-22 50-50v-30" fill="none" stroke="url(#accent)" stroke-width="26" stroke-linecap="round"/>
+  <circle cx="256" cy="222" r="84" fill="#E2E8F0" opacity=".98"/>
+  <path d="M145 391c13-72 56-112 111-112s98 40 111 112" fill="#E2E8F0" opacity=".98"/>
+  <circle cx="226" cy="216" r="9" fill="#0F172A"/>
+  <circle cx="286" cy="216" r="9" fill="#0F172A"/>
+  <path d="M224 252c19 15 45 15 64 0" fill="none" stroke="#0F172A" stroke-width="10" stroke-linecap="round"/>
+  <circle cx="390" cy="122" r="22" fill="#2DD4BF"/>
+</svg>

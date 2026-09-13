@@ -1,61 +1,50 @@
 # Roadmap — FaceIQ
 
-## Phase 0 — Cadrage
+## V1.0 — Application Windows
 
-Objectif : définir clairement le projet avant de coder.
+- [x] Interface graphique et traitement asynchrone
+- [x] Détection frontale et profils gauche/droit
+- [x] Suppression des détections en double
+- [x] Extraction et score technique sur 100
+- [x] Classement et galerie de résultats
+- [x] Rapports CSV et HTML
+- [x] Annulation, logs et gestion des images invalides
+- [x] Identité visuelle, icône et métadonnées Windows
+- [x] Tests unitaires et validation sur photos réelles publiques
+- [x] EXE PyInstaller et installateur Inno Setup
+- [x] Publication automatique d'une Release GitHub
+- [x] Licence MIT et notices tierces
 
-- [x] Choisir le nom du projet
-- [x] Créer le dépôt GitHub
-- [x] Rédiger le README initial
-- [x] Rédiger la spécification projet
-- [ ] Valider les fonctionnalités V1
-- [ ] Choisir les technologies
-- [ ] Créer les issues GitHub
+## V1.1 — Calibration
 
-## Phase 1 — Prototype moteur
+- [ ] Ajouter des réglages simples de sensibilité dans l'interface
+- [ ] Afficher le détail des sous-scores au clic
+- [ ] Ajouter HEIC si une dépendance locale fiable est retenue
+- [ ] Élargir le corpus de calibration
+- [ ] Signer numériquement le setup
 
-Objectif : prouver que l'analyse fonctionne sans interface graphique.
+## V2 — Lots photographiques
 
-- [ ] Lire un dossier d'images
-- [ ] Détecter les visages
-- [ ] Extraire les visages
-- [ ] Calculer la netteté
-- [ ] Calculer la luminosité
-- [ ] Calculer la taille du visage
-- [ ] Générer un score sur 100
-- [ ] Classer les images par score
-- [ ] Générer un rapport CSV
+La PR historique #7 reste une référence de conception, mais son code divergent
+n'est pas fusionné dans la V1.
 
-## Phase 2 — Application Windows simple
+- [ ] Créer un espace de travail par événement
+- [ ] Importer les originaux avec détection des doublons de fichiers
+- [ ] Ajouter un historique des analyses
 
-Objectif : rendre l'outil utilisable facilement.
+## V2 — Vidéo
 
-- [ ] Créer une interface graphique
-- [ ] Ajouter un bouton de sélection du dossier source
-- [ ] Ajouter un bouton de lancement d'analyse
-- [ ] Ajouter une barre de progression
-- [ ] Afficher un résumé des résultats
-- [ ] Ajouter un bouton pour ouvrir le dossier de sortie
+La PR historique #8 valide le principe d'échantillonnage vidéo, mais sa
+structure et sa couverture de tests ne permettent pas une fusion directe.
 
-## Phase 3 — Version propre et exécutable
+- [ ] Réimplémenter le traitement vidéo sur le moteur V1
+- [ ] Choisir l'intervalle d'échantillonnage
+- [ ] Limiter les doublons entre images successives
+- [ ] Exporter vidéo source et timecode
 
-Objectif : distribuer l'application facilement.
+## V3 — Sélection assistée
 
-- [ ] Nettoyer l'architecture
-- [ ] Ajouter un fichier de configuration
-- [ ] Ajouter des logs
-- [ ] Ajouter une gestion d'erreurs propre
-- [ ] Créer un exécutable Windows
-- [ ] Ajouter une icône
-- [ ] Rédiger une documentation utilisateur
-
-## Phase 4 — Améliorations avancées
-
-Objectif : rendre l'application plus intelligente.
-
-- [ ] Détecter les doublons
-- [ ] Regrouper les visages similaires
-- [ ] Sélectionner le meilleur visage d'une même personne
-- [ ] Générer un rapport HTML
-- [ ] Ajouter un mode sombre
-- [ ] Ajouter un export Excel
+- [ ] Regrouper optionnellement les visages similaires
+- [ ] Détecter les doublons visuels
+- [ ] Sélectionner le meilleur visage d'une série
+- [ ] Ajouter comparaison et export de sélection
