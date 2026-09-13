@@ -6,13 +6,14 @@ import threading
 from pathlib import Path
 
 from PySide6.QtCore import QObject, QThread, Qt, Signal, Slot, QUrl
-from PySide6.QtGui import QDesktopServices, QPixmap
+from PySide6.QtGui import QDesktopServices, QIcon, QPixmap
 from PySide6.QtWidgets import QApplication, QCheckBox, QFileDialog, QFrame, QHBoxLayout, QLabel, QMainWindow, QMessageBox, QPushButton, QProgressBar, QTableWidget, QTableWidgetItem, QVBoxLayout, QWidget
 
 from .analyzer import AnalysisCancelled, FaceAnalyzer
 from .config import AppConfig
 from .logger import configure_logging
 from .models import AnalysisSummary, FaceResult
+from .resources import resource_path
 
 
 class AnalysisWorker(QObject):
@@ -47,6 +48,7 @@ class MainWindow(QMainWindow):
     def __init__(self) -> None:
         super().__init__()
         self.setWindowTitle("FaceIQ")
+        self.setWindowIcon(QIcon(str(resource_path("assets/faceiq.ico"))))
         self.resize(1040, 720)
         self.source_folder: Path | None = None
         self.summary: AnalysisSummary | None = None
@@ -59,12 +61,37 @@ class MainWindow(QMainWindow):
         root = QVBoxLayout(central)
         root.setContentsMargins(24, 24, 24, 24)
         root.setSpacing(14)
+        hero = QFrame()
+        hero.setObjectName("hero")
+        hero_layout = QHBoxLayout(hero)
+        hero_layout.setContentsMargins(18, 16, 18, 16)
+        logo = QLabel()
+        logo.setObjectName("logo")
+        logo.setFixedSize(68, 68)
+        logo.setPixmap(
+            QPixmap(str(resource_path("assets/faceiq.png"))).scaled(
+                64, 64, Qt.KeepAspectRatio, Qt.SmoothTransformation
+            )
+        )
+        brand = QVBoxLayout()
         title = QLabel("FaceIQ")
         title.setObjectName("title")
-        subtitle = QLabel("Analyse locale de la qualité des visages dans vos photos")
-        subtitle.setObjectName("subtitle")
-        root.addWidget(title)
-        root.addWidget(subtitle)
+        subtitle = QLabel("Le regard technique sur vos photos")
+        subtitle.setObjectName("tagline")
+        description = QLabel(
+            "Détection, extraction et classement automatique de la qualité des visages"
+        )
+        description.setObjectName("subtitle")
+        brand.addWidget(title)
+        brand.addWidget(subtitle)
+        brand.addWidget(description)
+        privacy = QLabel("100 % LOCAL")
+        privacy.setObjectName("privacy")
+        privacy.setAlignment(Qt.AlignCenter)
+        hero_layout.addWidget(logo)
+        hero_layout.addLayout(brand, 1)
+        hero_layout.addWidget(privacy, 0, Qt.AlignTop)
+        root.addWidget(hero)
 
         picker = QFrame()
         picker.setObjectName("panel")
@@ -107,20 +134,22 @@ class MainWindow(QMainWindow):
             layout.addWidget(value); layout.addWidget(caption); self.stats_labels[key] = value; stats.addWidget(box)
         root.addLayout(stats)
 
-        self.table = QTableWidget(0, 5)
-        self.table.setHorizontalHeaderLabels(["Aperçu", "Score", "Classement", "Photo source", "Fichier"])
+        self.table = QTableWidget(0, 6)
+        self.table.setHorizontalHeaderLabels(["Aperçu", "Score", "Classement", "Pose", "Photo source", "Fichier"])
         self.table.setSelectionBehavior(QTableWidget.SelectRows)
         self.table.setEditTriggers(QTableWidget.NoEditTriggers)
         self.table.verticalHeader().setDefaultSectionSize(70)
         self.table.horizontalHeader().setStretchLastSection(True)
-        self.table.setColumnWidth(0, 72); self.table.setColumnWidth(1, 80); self.table.setColumnWidth(2, 100); self.table.setColumnWidth(3, 250)
+        self.table.setColumnWidth(0, 72); self.table.setColumnWidth(1, 80); self.table.setColumnWidth(2, 100); self.table.setColumnWidth(3, 105); self.table.setColumnWidth(4, 220)
         self.table.cellDoubleClicked.connect(self.open_result)
         root.addWidget(self.table, 1)
 
         bottom = QHBoxLayout()
         self.open_results_button = QPushButton("Ouvrir les résultats"); self.open_results_button.setEnabled(False); self.open_results_button.clicked.connect(self.open_results)
         self.open_report_button = QPushButton("Ouvrir le rapport"); self.open_report_button.setEnabled(False); self.open_report_button.clicked.connect(self.open_report)
-        bottom.addWidget(self.open_results_button); bottom.addWidget(self.open_report_button); bottom.addStretch(1); root.addLayout(bottom)
+        reassurance = QLabel("Analyse technique uniquement · aucune reconnaissance d'identité · aucune donnée envoyée")
+        reassurance.setObjectName("reassurance")
+        bottom.addWidget(self.open_results_button); bottom.addWidget(self.open_report_button); bottom.addStretch(1); bottom.addWidget(reassurance); root.addLayout(bottom)
         self.setCentralWidget(central)
         self.setStyleSheet(STYLESHEET)
 
@@ -153,8 +182,8 @@ class MainWindow(QMainWindow):
     def on_result(self, result: FaceResult) -> None:
         row = self.table.rowCount(); self.table.insertRow(row)
         preview = QLabel(); preview.setAlignment(Qt.AlignCenter); pixmap = QPixmap(str(result.crop_path)); preview.setPixmap(pixmap.scaled(58, 58, Qt.KeepAspectRatio, Qt.SmoothTransformation)); self.table.setCellWidget(row, 0, preview)
-        self.table.setItem(row, 1, QTableWidgetItem(f"{result.metrics.total:.1f}")); self.table.setItem(row, 2, QTableWidgetItem(result.metrics.category)); self.table.setItem(row, 3, QTableWidgetItem(result.source_path.name))
-        file_item = QTableWidgetItem(str(result.crop_path)); file_item.setData(Qt.UserRole, str(result.crop_path)); self.table.setItem(row, 4, file_item); self._update_live_stats(result)
+        self.table.setItem(row, 1, QTableWidgetItem(f"{result.metrics.total:.1f}")); self.table.setItem(row, 2, QTableWidgetItem(result.metrics.category)); self.table.setItem(row, 3, QTableWidgetItem(result.detection.pose)); self.table.setItem(row, 4, QTableWidgetItem(result.source_path.name))
+        file_item = QTableWidgetItem(result.crop_path.name); file_item.setToolTip(str(result.crop_path)); file_item.setData(Qt.UserRole, str(result.crop_path)); self.table.setItem(row, 5, file_item); self._update_live_stats(result)
 
     @Slot(object)
     def on_finished(self, summary: AnalysisSummary) -> None:
@@ -184,7 +213,7 @@ class MainWindow(QMainWindow):
 
     @Slot(int, int)
     def open_result(self, row: int, _column: int) -> None:
-        item = self.table.item(row, 4)
+        item = self.table.item(row, 5)
         if item: self._open_path(Path(item.data(Qt.UserRole)))
 
     @Slot()
@@ -202,9 +231,15 @@ class MainWindow(QMainWindow):
 
 
 STYLESHEET = """
-QWidget { background: #0f172a; color: #e2e8f0; font-family: 'Segoe UI'; font-size: 10pt; }
-QLabel#title { font-size: 26pt; font-weight: 700; color: white; } QLabel#subtitle { color: #94a3b8; }
-QFrame#panel, QFrame#stat { background: #1e293b; border: 1px solid #334155; border-radius: 10px; } QLabel#statValue { font-size: 20pt; font-weight: 700; color: white; }
+QWidget { background: #07111f; color: #e2e8f0; font-family: 'Segoe UI'; font-size: 10pt; }
+QFrame#hero { background: qlineargradient(x1:0,y1:0,x2:1,y2:1,stop:0 #172554,stop:1 #0f1f36); border: 1px solid #244266; border-radius: 16px; }
+QLabel#logo { background: transparent; }
+QLabel#title { background: transparent; font-size: 26pt; font-weight: 700; color: white; }
+QLabel#tagline { background: transparent; color: #67e8f9; font-size: 11pt; font-weight: 600; }
+QLabel#subtitle { background: transparent; color: #94a3b8; }
+QLabel#privacy { background: #103b46; color: #5eead4; border: 1px solid #21626a; border-radius: 10px; padding: 6px 10px; font-size: 8pt; font-weight: 700; }
+QLabel#reassurance { color: #64748b; font-size: 8pt; }
+QFrame#panel, QFrame#stat { background: #1e293b; border: 1px solid #334155; border-radius: 10px; } QLabel#statValue { background: transparent; font-size: 20pt; font-weight: 700; color: white; }
 QPushButton { background: #334155; border: 1px solid #475569; padding: 9px 15px; border-radius: 7px; } QPushButton:hover { background: #475569; } QPushButton:disabled { color: #64748b; background: #1e293b; } QPushButton#primary { background: #2563eb; border-color: #3b82f6; font-weight: 600; } QPushButton#primary:hover { background: #1d4ed8; }
 QProgressBar { background: #1e293b; border: 1px solid #334155; border-radius: 6px; text-align: center; height: 18px; } QProgressBar::chunk { background: #2563eb; border-radius: 5px; }
 QTableWidget { background: #111827; alternate-background-color: #172033; border: 1px solid #334155; gridline-color: #243244; } QHeaderView::section { background: #1e293b; color: #cbd5e1; padding: 8px; border: 0; border-right: 1px solid #334155; }
@@ -212,7 +247,13 @@ QTableWidget { background: #111827; alternate-background-color: #172033; border:
 
 
 def main() -> int:
-    app = QApplication(sys.argv); app.setApplicationName("FaceIQ"); window = MainWindow(); window.show(); return app.exec()
+    app = QApplication(sys.argv)
+    app.setApplicationName("FaceIQ")
+    app.setApplicationDisplayName("FaceIQ")
+    app.setWindowIcon(QIcon(str(resource_path("assets/faceiq.ico"))))
+    window = MainWindow()
+    window.show()
+    return app.exec()
 
 
 if __name__ == "__main__":

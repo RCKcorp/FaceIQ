@@ -88,6 +88,8 @@ class QualityScorer:
     @staticmethod
     def _orientation(detection: FaceDetection) -> float:
         eyes = list(detection.eyes)
+        if detection.pose != "Frontal" and len(eyes) < 2:
+            return 0.60
         if len(eyes) < 2:
             return 0.55 if len(eyes) == 1 else 0.35
         upper = [e for e in eyes if (e[1] + e[3] / 2) < detection.y + detection.height * 0.65]

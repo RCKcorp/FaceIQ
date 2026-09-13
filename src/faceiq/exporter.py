@@ -8,7 +8,7 @@ from pathlib import Path
 from .models import AnalysisSummary, FaceResult
 
 
-CSV_FIELDS = ["photo_source", "visage", "score_total", "classement", "netteté", "luminosité", "taille", "cadrage", "orientation", "confiance", "largeur_visage", "hauteur_visage", "variance_laplacien", "luminosité_moyenne", "fichier_visage"]
+CSV_FIELDS = ["photo_source", "visage", "pose", "score_total", "classement", "netteté", "luminosité", "taille", "cadrage", "orientation", "confiance", "largeur_visage", "hauteur_visage", "variance_laplacien", "luminosité_moyenne", "fichier_visage"]
 
 
 def ensure_output_structure(output_folder: Path) -> None:
@@ -41,7 +41,7 @@ def export_html(summary: AnalysisSummary) -> Path:
     cards = []
     for result in sorted(summary.results, key=lambda r: r.metrics.total, reverse=True):
         rel = result.crop_path.relative_to(summary.output_folder).as_posix()
-        cards.append("<article class='card'>" f"<img src='{html.escape(rel)}' alt='Visage'>" f"<strong>{result.metrics.total:.1f}/100 — {html.escape(result.metrics.category)}</strong>" f"<span>{html.escape(result.source_path.name)} · visage {result.face_index}</span>" "</article>")
+        cards.append("<article class='card'>" f"<img src='{html.escape(rel)}' alt='Visage'>" f"<strong>{result.metrics.total:.1f}/100 — {html.escape(result.metrics.category)}</strong>" f"<span>{html.escape(result.source_path.name)} · visage {result.face_index} · {html.escape(result.detection.pose)}</span>" "</article>")
 
     document = f"""<!doctype html>
 <html lang='fr'><head><meta charset='utf-8'><meta name='viewport' content='width=device-width,initial-scale=1'>
@@ -56,4 +56,4 @@ body{{font-family:Segoe UI,Arial,sans-serif;background:#0f172a;color:#e2e8f0;mar
 def _row(result: FaceResult) -> dict[str, object]:
     m = result.metrics
     d = result.detection
-    return {"photo_source": str(result.source_path), "visage": result.face_index, "score_total": m.total, "classement": m.category, "netteté": m.sharpness, "luminosité": m.brightness, "taille": m.size, "cadrage": m.framing, "orientation": m.orientation, "confiance": m.confidence, "largeur_visage": d.width, "hauteur_visage": d.height, "variance_laplacien": m.raw_laplacian_variance, "luminosité_moyenne": m.raw_brightness, "fichier_visage": str(result.crop_path)}
+    return {"photo_source": str(result.source_path), "visage": result.face_index, "pose": d.pose, "score_total": m.total, "classement": m.category, "netteté": m.sharpness, "luminosité": m.brightness, "taille": m.size, "cadrage": m.framing, "orientation": m.orientation, "confiance": m.confidence, "largeur_visage": d.width, "hauteur_visage": d.height, "variance_laplacien": m.raw_laplacian_variance, "luminosité_moyenne": m.raw_brightness, "fichier_visage": str(result.crop_path)}

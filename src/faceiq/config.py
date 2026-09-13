@@ -31,6 +31,8 @@ class AppConfig:
     min_face_size: int = 42
     detection_scale_factor: float = 1.08
     detection_min_neighbors: int = 5
+    profile_min_neighbors: int = 4
+    deduplication_iou: float = 0.32
     recursive: bool = True
     weights: ScoreWeights = field(default_factory=ScoreWeights)
 
@@ -45,6 +47,10 @@ class AppConfig:
             raise ValueError("crop_margin doit être compris entre 0 et 1.5.")
         if self.min_face_size < 20:
             raise ValueError("min_face_size est trop faible.")
+        if self.profile_min_neighbors < 3:
+            raise ValueError("profile_min_neighbors est trop faible.")
+        if not 0.0 < self.deduplication_iou < 1.0:
+            raise ValueError("deduplication_iou doit être compris entre 0 et 1.")
         if not (0 <= self.medium_min < self.good_min < self.excellent_min <= 100):
             raise ValueError("Les seuils de classement sont invalides.")
 

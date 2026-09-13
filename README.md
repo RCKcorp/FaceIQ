@@ -1,48 +1,53 @@
-# FaceIQ
+<p align="center">
+  <img src="assets/faceiq.svg" width="112" alt="Logo FaceIQ">
+</p>
 
-FaceIQ est une application Windows locale qui détecte les visages présents dans un dossier de photos, extrait chaque visage, évalue sa qualité technique puis classe les résultats.
+<h1 align="center">FaceIQ</h1>
 
-## Fonctionnalités V1
+<p align="center"><strong>Le regard technique sur vos photos.</strong></p>
 
-- interface graphique Windows ;
-- sélection d'un dossier et traitement optionnel des sous-dossiers ;
-- détection des visages entièrement locale avec OpenCV ;
-- extraction automatique avec marge autour du visage ;
-- score de qualité sur 100 ;
-- détail du score : netteté, luminosité, taille, cadrage, orientation et confiance ;
-- classement `Excellent`, `Bon`, `Moyen`, `Mauvais` ;
-- galerie de résultats dans l'application ;
-- export CSV et rapport HTML local ;
-- gestion des images invalides sans interrompre tout le lot ;
-- bouton d'annulation ;
-- build Windows avec PyInstaller ;
-- script Inno Setup pour obtenir un vrai installateur avec désinstallation Windows.
+FaceIQ est une application Windows locale qui détecte les visages présents
+dans un dossier de photos, les extrait, évalue leur qualité technique et classe
+les résultats. Aucune photo n'est envoyée vers un service en ligne.
 
-Aucune photo n'est envoyée dans le cloud.
+![Interface principale de FaceIQ](docs/images/faceiq-main.png)
 
-## Installation développeur
+## Fonctionnalités
 
-Prérequis : Python 3.11 x64.
+- interface graphique Windows 10/11 ;
+- analyse d'un dossier et, au choix, de ses sous-dossiers ;
+- détection locale des visages frontaux et des profils gauche/droit ;
+- extraction avec une marge autour du visage ;
+- score technique sur 100 : netteté, luminosité, taille, cadrage, orientation
+  et confiance de détection ;
+- classement **Excellent**, **Bon**, **Moyen** ou **Mauvais** ;
+- galerie intégrée, rapports CSV et HTML ;
+- annulation, journal local et poursuite du lot lorsqu'une image est illisible ;
+- véritable installateur Windows avec entrée de désinstallation.
 
-```powershell
-py -3.11 -m venv .venv
-.\.venv\Scripts\Activate.ps1
-python -m pip install -r requirements-dev.txt
-$env:PYTHONPATH="src"
-python -m faceiq
-```
+La note ne mesure ni l'identité, ni l'attractivité, ni une caractéristique
+personnelle.
 
-## Build Windows
+## Installer FaceIQ
 
-```powershell
-.\build.ps1
-```
+Télécharger **FaceIQ-Setup-1.0.0.exe** depuis la
+[dernière Release](https://github.com/RCKcorp/FaceIQ/releases/latest), lancer
+le setup puis ouvrir FaceIQ depuis le menu Démarrer.
 
-Le build produit `dist\FaceIQ.exe`. Pour produire l'installateur, compiler `installer\FaceIQ.iss` avec Inno Setup 6. L'installation apparaît ensuite dans **Applications installées** de Windows et peut être désinstallée normalement.
+L'installation est effectuée pour l'utilisateur courant et ne demande pas de
+droit administrateur. FaceIQ apparaît ensuite dans **Applications installées**
+et peut être désinstallé normalement.
 
-## Résultats
+## Utilisation
 
-```text
+1. Cliquer sur **Choisir un dossier**.
+2. Activer ou non l'analyse des sous-dossiers.
+3. Cliquer sur **Analyser**.
+4. Consulter la galerie puis ouvrir le dossier de résultats ou le rapport.
+
+Les résultats sont créés à côté du dossier analysé :
+
+~~~text
 FaceIQ_Resultats_YYYYMMDD_HHMMSS/
 ├── Excellent/
 ├── Bon/
@@ -51,25 +56,55 @@ FaceIQ_Resultats_YYYYMMDD_HHMMSS/
 ├── Tous_les_visages/
 ├── rapport_analyse.csv
 └── rapport_analyse.html
-```
+~~~
 
-## Score qualité
+## Validation
 
-| Critère | Poids |
-|---|---:|
-| Netteté | 35 |
-| Luminosité | 20 |
-| Taille | 20 |
-| Cadrage | 10 |
-| Orientation | 10 |
-| Confiance de détection | 5 |
+La suite comprend 13 tests, dont une validation locale sur un corpus public de
+100 vrais visages variés, 100 images sans visage et une photographie de
+profil. Lors de la validation V1 : 88 visages sur 100 ont été détectés et
+5 images sans visage sur 100 ont produit au moins une détection.
 
-La note est technique et sert au tri. Elle ne mesure ni l'identité, ni l'attractivité, ni des caractéristiques personnelles.
+Les détails et les limites sont documentés dans
+[docs/VALIDATION.md](docs/VALIDATION.md).
+
+## Développement
+
+Prérequis : Python 3.11 x64.
+
+~~~powershell
+py -3.11 -m venv .venv
+.\.venv\Scripts\Activate.ps1
+python -m pip install -r requirements-dev.txt
+$env:PYTHONPATH="src"
+python -m faceiq
+~~~
+
+Pour exécuter les tests :
+
+~~~powershell
+python -m pytest
+~~~
+
+Pour construire l'EXE puis, si Inno Setup 6 est installé, le setup :
+
+~~~powershell
+.\build.ps1
+~~~
+
+GitHub Actions vérifie les tests, construit **FaceIQ.exe**, compile le setup et
+publie la Release **v1.0.0** lors de la mise à jour de **main**.
 
 ## Confidentialité
 
-FaceIQ fonctionne localement. Les photos et visages extraits restent sur la machine de l'utilisateur.
+- traitement entièrement local ;
+- aucun compte requis ;
+- aucune télémétrie ;
+- aucune reconnaissance d'identité ;
+- aucune photo de test ajoutée au dépôt.
 
-## Suite prévue
+## Licence
 
-La V2 pourra remplacer le backend OpenCV classique par YuNet et ajouter, de manière optionnelle, le regroupement de photos d'une même personne afin de sélectionner le meilleur cliché d'une série.
+Code distribué sous [licence MIT](LICENSE). Les bibliothèques tierces conservent
+leurs licences respectives, récapitulées dans
+[THIRD_PARTY_NOTICES.md](THIRD_PARTY_NOTICES.md).

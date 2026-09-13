@@ -1,44 +1,50 @@
 # Roadmap — FaceIQ
 
-## V1 — Application locale Windows
+## V1.0 — Application Windows
 
-- [x] Définir le projet et l’architecture
-- [x] Lire un dossier d’images
-- [x] Inclure optionnellement les sous-dossiers
-- [x] Détecter les visages localement
-- [x] Extraire les visages avec marge
-- [x] Calculer netteté, luminosité, taille, cadrage, orientation et confiance
-- [x] Générer un score sur 100
-- [x] Classer Excellent / Bon / Moyen / Mauvais
-- [x] Générer un rapport CSV
-- [x] Générer un rapport HTML
-- [x] Créer l’interface Windows
-- [x] Ajouter barre de progression et annulation
-- [x] Afficher les résultats dans l’application
-- [x] Ajouter logs et gestion d’erreurs
-- [x] Ajouter tests unitaires
-- [x] Préparer le build PyInstaller
-- [x] Préparer un installateur Inno Setup
-- [x] Ajouter une CI Windows
+- [x] Interface graphique et traitement asynchrone
+- [x] Détection frontale et profils gauche/droit
+- [x] Suppression des détections en double
+- [x] Extraction et score technique sur 100
+- [x] Classement et galerie de résultats
+- [x] Rapports CSV et HTML
+- [x] Annulation, logs et gestion des images invalides
+- [x] Identité visuelle, icône et métadonnées Windows
+- [x] Tests unitaires et validation sur photos réelles publiques
+- [x] EXE PyInstaller et installateur Inno Setup
+- [x] Publication automatique d'une Release GitHub
+- [x] Licence MIT et notices tierces
 
 ## V1.1 — Calibration
 
-- [ ] Tester le score sur un corpus de photos réelles variées
-- [ ] Ajuster les courbes de netteté et luminosité
-- [ ] Ajouter un panneau détaillant les sous-scores dans l’interface
-- [ ] Ajouter une icône et les métadonnées Windows de l’exécutable
-- [ ] Ajouter des tests d’intégration sur un petit corpus non sensible
+- [ ] Ajouter des réglages simples de sensibilité dans l'interface
+- [ ] Afficher le détail des sous-scores au clic
+- [ ] Ajouter HEIC si une dépendance locale fiable est retenue
+- [ ] Élargir le corpus de calibration
+- [ ] Signer numériquement le setup
 
-## V2 — Détection améliorée
+## V2 — Lots photographiques
 
-- [ ] Ajouter un backend YuNet local
-- [ ] Conserver le backend OpenCV classique en secours
-- [ ] Améliorer l’estimation de pose du visage
-- [ ] Ajouter les réglages de seuils dans l’interface
+La PR historique #7 reste une référence de conception, mais son code divergent
+n'est pas fusionné dans la V1.
 
-## V3 — Regroupement optionnel
+- [ ] Créer un espace de travail par événement
+- [ ] Importer les originaux avec détection des doublons de fichiers
+- [ ] Ajouter un historique des analyses
 
-- [ ] Regrouper les visages similaires par personne
-- [ ] Détecter les doublons
-- [ ] Sélectionner automatiquement le meilleur visage d’une série
+## V2 — Vidéo
+
+La PR historique #8 valide le principe d'échantillonnage vidéo, mais sa
+structure et sa couverture de tests ne permettent pas une fusion directe.
+
+- [ ] Réimplémenter le traitement vidéo sur le moteur V1
+- [ ] Choisir l'intervalle d'échantillonnage
+- [ ] Limiter les doublons entre images successives
+- [ ] Exporter vidéo source et timecode
+
+## V3 — Sélection assistée
+
+- [ ] Regrouper optionnellement les visages similaires
+- [ ] Détecter les doublons visuels
+- [ ] Sélectionner le meilleur visage d'une série
 - [ ] Ajouter comparaison et export de sélection

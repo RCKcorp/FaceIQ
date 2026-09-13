@@ -12,6 +12,7 @@ class FaceDetection:
     height: int
     confidence: float = 0.75
     eyes: tuple[tuple[int, int, int, int], ...] = ()
+    pose: str = "Frontal"
 
     @property
     def area(self) -> int:
