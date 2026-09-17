@@ -14,21 +14,36 @@ build/
 dist/
 *.egg-info/
 
-# IDE
+# Secrets / local configuration
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*.p12
+*.pfx
+*.crt
+secrets/
+credentials/
+
+# IDE / local tooling
 .vscode/
 .idea/
+.claude/
 
 # Logs
 *.log
 logs/
 
-# Local data
+# Local user data
 samples/*
 !samples/.gitkeep
 output/*
 !output/.gitkeep
 FaceIQ_Resultats/
+FaceIQ_Resultats_*/
 
 # OS
 .DS_Store
 Thumbs.db
+Desktop.ini
